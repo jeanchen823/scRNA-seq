@@ -1,0 +1,108 @@
+
+第一步创建环境 激活环境 
+conda  create -n cellranger
+conda activate cellranger
+
+
+第二步在10x官方下载 cellranger软件
+
+官网： https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest?
+
+下载数据 wget -O cellranger-6.1.2.tar.gz "https://cf.10xgenomics.com/releases/cell-exp/cellranger-6.1.2.tar.gz?Expires=1652197117&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci02LjEuMi50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2NTIxOTcxMTd9fX1dfQ__&Signature=B6UCZgHaSEpBV5vcSlHQsz2cLwRjEn7gYsojDfSv7p-qXVSEDCOE6ggHiYq1WnkmRGid9RbfbxGzbcFA8xSCs3w3u6jXXYioeZLWWTvF~a0aj0n6NJoNjITn75R0-7O45rQIic11mcmD84W23RqVIHDX-~ho11hbd3aM9n7u6I9874VlzVFhHFQ4G5zjM2pOIsGdbWQRgNSR1MDEAd2cLmvnQxXWWW4rWM60fNKhXcCgJ95zYzvN6sgSbpzQVLDJNvr5Q9tTF-9zr3QhwBTqgcQAnZZgn1Ob3rqoHFFim4cOUEiSrGfdpuGxcQtsi5lfyK3QK4MnjXr~oEqBvaJkDg__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA"
+
+
+wget -O cellranger-8.0.0.tar.gz "https://cf.10xgenomics.com/releases/cell-exp/cellranger-8.0.0.tar.gz?Expires=1713740757&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA&Signature=DggTCCaJJN~Xs5aIawGa7JyWeUALpr8SZw-16WxV7Lzk6TLhw2~pGRxMMhVi13r~R4mEc8s89X7dz~L12rLfGKpsqGKDFDaULGjmtTTyR19qRmnml8TicdSQY-OHSxiLP3BJxaiCQgea3Sn39TObQC6M-Ep4C19Eh6tQCT3MJmQqL7xHHgxS-Bo7umWe7G~C4cfD7J0oemaDZVfnX2TlgOeWQR42-rB-NWuJAxlRspcvZuiQFUnuYCO~zbNk9xB4Ox9whu~B3tuiQXv0hV3duh~dREv~r7qHlOnU~qSBvvcEwkIH7Skl22cdAHnmanWsWIowxSGPjM19NgmppiKnLg__"
+
+第三步解压文件
+tar -zxvf cellranger-6.1.2.tar.gz
+tar -zxvf  cellranger-8.0.0.tar.gz
+
+第四步 添加临时变量 两种方法 （推荐使用第一种）
+第一：进入到解压之后的文件夹 然后用bash命令激活
+cd /mnt/e/cellranger/cellranger-6.1.2
+(hauge1) zzh1157@DESKTOP-0P2LBK9:/mnt/e/cellranger/cellranger-6.1.2$ ls
+LICENSE  bin  builtwith.json  cellranger  external  lib  mro  sourceme.bash  sourceme.csh  target_panels
+激活环境
+bash sourceme.bash
+
+第二种方法：
+#添加临时变量（每次使用都需要添加）
+
+export PATH=/GPUFS/sysu_wangjj_1/cellranger/cellranger-7.1.0:$PATH
+
+export PATH=/mnt/e/super.lesson/lesson15/cellranger/cellranger-7.0.1:$PATH
+
+export PATH=/mnt/e/super.lesson/lesson15/4.21/cellranger-8.0.0:$PATH
+
+第五步 检查是否激活成功
+cellranger -h
+
+第六步 下载参考基因组 
+
+wget https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCh38-2020-A.tar.gz
+
+wget "https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-GRCh38-2024-A.tar.gz"
+
+解压
+
+tar -zxvf refdata-gex-GRCh38-2020-A.tar.gz
+tar -zxvf  refdata-gex-GRCh38-2024-A.tar.gz
+第七步 打开官网下载数据
+
+官网;
+https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE152048
+https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR11955379
+
+wget https://sra-pub-run-odp.s3.amazonaws.com/sra/SRR11955376/SRR11955376
+
+第八步  ：转化数据 将srr转为fastq文件
+软件官方：
+https://github.com/rvalieris/parallel-fastq-dump
+
+8.1 创建环境
+conda  create -n  parallel-fastq-dump  python=3.6
+8.2 激活环境
+conda activate parallel-fastq-dump
+8.3 安装软件
+conda install -c bioconda parallel-fastq-dump
+8.4 检查是否安装成功
+parallel-fastq-dump  -h
+
+第九步  对文件重命名
+mv SRR11955379.1  sc.bc22
+
+第十步 开始转化fastq文件
+parallel-fastq-dump --sra-id bc22.123   --threads 35  --outdir  fastq.data.bc22.5/   --split-files --gzip
+
+第十一步 cellranger
+注意要更改fastq文件名字
+bc_S1_L001_R1_001.fastq.gz
+bc_S1_L001_R2_001.fastq.gz
+
+
+
+
+cellranger count --id=bc   --transcriptome=/mnt/e/super.lesson/lesson18/s18/ref/refdata-gex-GRCh38-2020-A
+--fastqs=/mnt/e/super.lesson/lesson18/s18/fastq/fastq.data  --sample=bc --nosecondary
+
+
+cellranger count --id bc   --transcriptome /mnt/e/super.lesson/lesson15/4.21/refdata-gex-GRCh38-2024-A
+--fastqs  /mnt/e/super.lesson/lesson15/4.21/fastq.data.bc22.5  --sample  bc --nosecondary
+
+
+ /GPUFS/sysu_wangjj_1/cellranger/ref/refdata-gex-GRCh38-2020-A
+ /GPUFS/sysu_wangjj_1/superlesson/lesson15/fastq.data.bc22.5
+
+
+ bc22_S1_L001_R1_001.fastq.gz
+ bc22_S1_L001_R2_001.fastq.gz
+
+LZX_0921-2 ,
+
+cellranger count --id=LZX_0921   --transcriptome=/mnt/f/ref.data/cellranger/hg38/refdata-gex-GRCh38-2020-A 
+--fastqs=/mnt/g/301.cy/1/LZX_0921  --sample=LZX_0921-1,LZX_0921-2,LZX_0921-3,LZX_0921-4,LZX_0921-5,LZX_0921-6  --nosecondary
+
+cellranger count --id=LZX_0921   --transcriptome=/mnt/f/ref.data/cellranger/hg38/refdata-gex-GRCh38-2020-A --fastqs=/mnt/g/301.cy/1/LZX_0921  --sample=LZX_0921-1,LZX_0921-2,LZX_0921-3,LZX_0921-4,LZX_0921-5,LZX_0921-6  --nosecondary
+
+
+

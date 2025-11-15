@@ -1,0 +1,44 @@
+
+##scanpy
+第一步
+conda  create -n huage python=3.6
+
+第二步：
+conda activate huage
+
+
+conda install anaconda::notebook
+
+
+jupyter notebook --no-browser
+
+
+### 关闭
+输入 control + c  输入两次
+
+##Loom
+
+
+创建3.7的环境
+conda create -n velocyto python=3.7
+
+激活环境
+conda activate velocyto
+
+在velocyto环境下 安装软件
+ conda install -c bioconda velocyto.py
+
+检查是否安装成功
+velocyto --help
+
+生成loom文件
+ 
+velocyto run10x -m   /mnt/e/super.lesson/lesson18/s18/velo.rmsk/hg38_rmsk.gtf   /mnt/e/super.lesson/lesson18/s18/bc  /mnt/e/super.lesson/lesson18/s18/ref/refdata-gex-GRCh38-2020-A/genes/genes.gtf
+
+
+## 注意：genes.gtf是10x官方参考基因组中的文件   一定要注意加上绝对路径
+                hg19_rmsk.gtf是要从ucsc官网下载  注意选择hg38
+                 https://genome.ucsc.edu/cgi-bin/hgTables?hgsid=611454127_NtvlaW6xBSIRYJEBI0iRDEWisITa&clade=mammal&org=&db=hg19&hgta_group=allTracks&hgta_track=rmsk&hgta_table=rmsk&hgta_regionType=genome&position=&hgta_outputType=gff&hgta_outFileName=hg19_rmsk.gtf
+  
+               /mnt/e/super.lesson/lesson15/fastq.data/bc   该路径是10x比对定量存放的文件夹 一定要先运行cellranger之后才有该文件夹
+
